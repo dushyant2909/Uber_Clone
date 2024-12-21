@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import errorHandler from './middlewares/errorHandler.js';
 
 const app = express();
 
@@ -24,5 +25,7 @@ app.use(cookieParser());
 app.use('/', (req, res) => {
     res.send("Working great!")
 })
+
+app.use(errorHandler)
 
 export { app }
