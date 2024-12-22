@@ -1,12 +1,14 @@
-import express from 'express'
-import cors from 'cors'
-import cookieParser from 'cookie-parser'
-import errorHandler from './middlewares/errorHandler.js';
-import logger from '../logger.js';
-import morgan from 'morgan';
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import errorHandler from "./middlewares/errorHandler.js";
+import logger from "../logger.js";
+import morgan from "morgan";
+import swaggerUi from "swagger-ui-express";
+import yaml from 'yamljs'
 
-import healthCheckRoute from './routes/healthCheckRoutes.js';
-import userRoute from './routes/userRoutes.js';
+import healthCheckRoute from "./routes/healthCheckRoutes.js";
+import userRoute from "./routes/userRoutes.js";
 
 const morganFormat = ":method :url :status :response-time ms";
 
@@ -14,18 +16,20 @@ const app = express();
 
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
-    credentials: true
-}))
+    credentials: true,
+}));
 
 app.use(express.json({
-    limit: "16kb"
-}))
+    limit: "16kb",
+}));
 
-// For handling data which comes from url
 app.use(express.urlencoded({
-    extended: true, // for using objects under objects
-    limit: "16kb"
-}))
+    extended: true,
+    limit: "16kb",
+}));
+
+// Load swagger documentation
+const swaggerDocument = yaml.load('./swagger/swagger.yaml')
 
 app.use(cookieParser());
 
@@ -45,14 +49,17 @@ app.use(
     })
 );
 
+// Swagger UI route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+
 // Routes
-app.use('/api/v1/healthcheck', healthCheckRoute)
-app.use('/api/v1/user', userRoute)
+app.use("/api/v1/healthcheck", healthCheckRoute);
+app.use("/api/v1/user", userRoute);
 
-app.use('/', (req, res) => {
-    res.send("Working great!")
-})
+app.use("/", (req, res) => {
+    res.send("Working great!");
+});
 
-app.use(errorHandler)
+app.use(errorHandler);
 
-export { app }
+export { app };

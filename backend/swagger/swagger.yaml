@@ -1,0 +1,135 @@
+openapi: 3.0.0
+info:
+  title: Uber Clone API
+  version: 1.0.0
+  description: API documentation for the Uber Clone project
+servers:
+  - url: http://localhost:8000
+    description: Development server
+paths:
+  /api/v1/user/register:
+    post:
+      summary: Register a new user
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  description: The first name of the user
+                  example: John
+                lastName:
+                  type: string
+                  description: The last name of the user
+                  example: Doe
+                email:
+                  type: string
+                  description: The email of the user
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  description: The password of the user
+                  example: securepassword123
+      responses:
+        201:
+          description: User registered successfully
+        400:
+          description: Validation error
+        409:
+          description: User already exists
+
+  /api/v1/user/login:
+    post:
+      summary: Log in an existing user
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email of the user
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  description: The password of the user
+                  example: securepassword123
+      responses:
+        200:
+          description: User logged in successfully
+          headers:
+            Set-Cookie:
+              description: Cookies containing access and refresh tokens
+              schema:
+                type: string
+                example: accessToken=eyJhbGciOiJIUzI1NiIsInR5cC...; HttpOnly; Secure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                      _id:
+                        type: string
+                        example: 642c12345d5e4567ab890123
+                      firstName:
+                        type: string
+                        example: John
+                      lastName:
+                        type: string
+                        example: Doe
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                  message:
+                    type: string
+                    example: User logged in successfully
+        400:
+          description: Validation error
+        401:
+          description: Invalid password
+        404:
+          description: User not found
+
+  /api/v1/healthcheck:
+    get:
+      summary: Perform a health check of the server
+      tags:
+        - HealthCheck
+      responses:
+        200:
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                  message:
+                    type: string
+                    example: Ok Tested
