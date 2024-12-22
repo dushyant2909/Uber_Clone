@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: Uber Clone API
+  version: 1.0.0
+  description: API documentation for the Uber Clone project
+servers:
+  - url: http://localhost:8000
+    description: Development server
+paths:
+  /api/v1/user/register:
+    post:
+      summary: Register a new user
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  description: The first name of the user
+                  example: John
+                lastName:
+                  type: string
+                  description: The last name of the user
+                  example: Doe
+                email:
+                  type: string
+                  description: The email of the user
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  description: The password of the user
+                  example: securepassword123
+      responses:
+        201:
+          description: User registered successfully
+        400:
+          description: Validation error
+        409:
+          description: User already exists
+
+  /api/v1/healthcheck:
+    get:
+      summary: Perform a health check of the server
+      tags:
+        - HealthCheck
+      responses:
+        200:
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                  message:
+                    type: string
+                    example: Ok Tested
