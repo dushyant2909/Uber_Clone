@@ -22,9 +22,11 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: ['Password is required', true],
-        select: false
     },
     socketId: {
+        type: String
+    },
+    refreshToken: {
         type: String
     }
 }, {
@@ -32,13 +34,29 @@ const userSchema = new Schema({
 })
 
 // Define some methods
-userSchema.methods.generateAuthToken = async function () {
+userSchema.methods.generateAccessToken = async function () {
     return jwt.sign(
-        { _id: this._id },
-        process.env.JWT_SECRET,
+        // Create a payload
+        {
+            _id: this._id,
+            email: this.email,
+        },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expiresIn: process.env.JWT_TOKEN_EXPIRY
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+}
+
+userSchema.methods.generateRefreshToken = async function () {
+    return jwt.sign(
+        // Create a payload
+        {
+            _id: this._id,
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }
     )
 }
