@@ -49,16 +49,12 @@ app.use(
     })
 );
 
-// Swagger UI route
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-
 // Routes
 app.use("/api/v1/healthcheck", healthCheckRoute);
 app.use("/api/v1/user", userRoute);
 
-app.use("/", (req, res) => {
-    res.send("Working great!");
-});
+// Swagger UI route
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.use(errorHandler);
 
