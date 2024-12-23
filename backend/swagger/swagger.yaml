@@ -7,6 +7,32 @@ servers:
   - url: http://localhost:8000
     description: Development server
 paths:
+  /api/v1/healthcheck:
+    get:
+      summary: Perform a health check of the server
+      tags:
+        - HealthCheck
+      responses:
+        200:
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                  message:
+                    type: string
+                    example: Ok Tested
+
   /api/v1/user/register:
     post:
       summary: Register a new user
@@ -71,7 +97,7 @@ paths:
               description: Cookies containing access and refresh tokens
               schema:
                 type: string
-                example: accessToken=eyJhbGciOiJIUzI1NiIsInR5cC...; HttpOnly; Secure
+                example: accessToken=eyJhbGciOiJIUzI1NiIsInR5c...; HttpOnly; Secure
           content:
             application/json:
               schema:
@@ -108,14 +134,16 @@ paths:
         404:
           description: User not found
 
-  /api/v1/healthcheck:
+  /api/v1/user/profile:
     get:
-      summary: Perform a health check of the server
+      summary: Get user profile
       tags:
-        - HealthCheck
+        - User
+      security:
+        - bearerAuth: []
       responses:
         200:
-          description: Server is healthy
+          description: User profile fetched successfully
           content:
             application/json:
               schema:
@@ -127,9 +155,56 @@ paths:
                   data:
                     type: object
                     properties:
-                      success:
-                        type: boolean
-                        example: true
+                      firstName:
+                        type: string
+                        example: John
+                      lastName:
+                        type: string
+                        example: Doe
+                      email:
+                        type: string
+                        example: john.doe@example.com
                   message:
                     type: string
-                    example: Ok Tested
+                    example: User profile fetched successfully
+        401:
+          description: Unauthorized access
+        404:
+          description: User not found
+
+  /api/v1/user/logout:
+    post:
+      summary: Log out the user
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: User logged out successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  data:
+                    type: string
+                    nullable: true
+                    example: null
+                  message:
+                    type: string
+                    example: User logged out successfully
+        401:
+          description: Unauthorized access
+        404:
+          description: User not found
+  
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
