@@ -113,4 +113,28 @@ const getUserProfile = asyncHandler(async (req, res) => {
     );
 })
 
-export { registerUser, loginUser, getUserProfile };
+const logoutUser = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    user.refreshToken = null;
+    await user.save({ validateBeforeSave: false });
+
+    const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict"
+    }
+
+    return res.status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json(
+            new ApiResponse(200, null, "User logged out successfully")
+        );
+})
+
+export { registerUser, loginUser, getUserProfile, logoutUser };
