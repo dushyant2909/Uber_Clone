@@ -1,8 +1,8 @@
-import mongoose, { Schema } from 'mongoose'
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import mongoose, { Schema } from "mongoose";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-const userSchema = new Schema({
+const captainSchema = new Schema({
     firstName: {
         type: String,
         required: true,
@@ -18,6 +18,7 @@ const userSchema = new Schema({
         lowercase: true,
         unique: true,
         trim: true,
+        match: [/\S+@\S+\.\S+/, 'Please enter a valid email']
     },
     password: {
         type: String,
@@ -29,13 +30,44 @@ const userSchema = new Schema({
     },
     refreshToken: {
         type: String
+    },
+    status: {
+        type: String,
+        enum: ['active', 'inactive'],
+        default: 'inactive'
+    },
+    vehicle: {
+        color: {
+            type: String,
+            required: true
+        },
+        number: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        capacity: {
+            type: Number,
+            required: true,
+            min: [1, 'Capacity must be at least 1']
+        },
+        type: {
+            type: String,
+            enum: ['car', 'auto', 'motorcycle'],
+            required: true
+        }
+    },
+    location: {
+        latitude: {
+            type: Number,
+        },
+        longitude: {
+            type: Number,
+        }
     }
-}, {
-    timestamps: true
-})
+}, { timestamps: true })
 
-// Define some methods
-userSchema.methods.generateAccessToken = async function () {
+captainSchema.generateAccessToken = async function () {
     return jwt.sign(
         // Create a payload
         {
@@ -49,7 +81,7 @@ userSchema.methods.generateAccessToken = async function () {
     )
 }
 
-userSchema.methods.generateRefreshToken = async function () {
+captainSchema.methods.generateRefreshToken = async function () {
     return jwt.sign(
         // Create a payload
         {
@@ -62,12 +94,12 @@ userSchema.methods.generateRefreshToken = async function () {
     )
 }
 
-userSchema.methods.isPasswordCorrect = async function (password) {
+captainSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password)
 }
 
 // Pre hook
-userSchema.pre("save", async function (next) {
+captainSchema.pre("save", async function (next) {
     if (!this.isModified("password"))
         return next();
 
@@ -76,4 +108,4 @@ userSchema.pre("save", async function (next) {
     next();
 })
 
-export const User = mongoose.model("User", userSchema)
+export const Captain = mongoose.model('Captain', captainSchema)
