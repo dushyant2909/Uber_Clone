@@ -23,7 +23,6 @@ const captainSchema = new Schema({
     password: {
         type: String,
         required: ['Password is required', true],
-        select: false
     },
     socketId: {
         type: String

@@ -65,4 +65,44 @@ const registerCaptain = asyncHandler(async (req, res) => {
     );
 })
 
-export { registerCaptain }
+const loginCaptain = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        throw new ApiError(400, "Email and password are required");
+    }
+
+    const captain = await Captain.findOne({ email })
+    if (!captain) {
+        throw new ApiError(404, "Captain not found with this email");
+    }
+
+    const isMatch = await captain.isPasswordCorrect(password);
+    if (!isMatch) {
+        throw new ApiError(401, "Invalid password");
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(captain._id);
+
+    // Cookie-options
+    const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+    }
+
+    return res.status(200)
+        .cookie('accessToken', accessToken, options)
+        .cookie('refreshToken', refreshToken, options)
+        .json(
+            new ApiResponse(200, {
+                accessToken,
+                _id: captain._id,
+                firstName: captain.firstName,
+                lastName: captain.lastName,
+                email: captain.email,
+                vehicle: captain.vehicle
+            }, "Captain logged in successfully")
+        );
+})
+
+export { registerCaptain, loginCaptain }
