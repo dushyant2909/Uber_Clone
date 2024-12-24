@@ -67,7 +67,7 @@ const captainSchema = new Schema({
     }
 }, { timestamps: true })
 
-captainSchema.generateAccessToken = async function () {
+captainSchema.methods.generateAccessToken = async function () {
     return jwt.sign(
         // Create a payload
         {
