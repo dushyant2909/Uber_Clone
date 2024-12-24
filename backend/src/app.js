@@ -9,6 +9,7 @@ import yaml from 'yamljs'
 
 import healthCheckRoute from "./routes/healthCheckRoutes.js";
 import userRoute from "./routes/userRoutes.js";
+import captainRoute from "./routes/captainRoutes.js";
 
 const morganFormat = ":method :url :status :response-time ms";
 
@@ -52,6 +53,7 @@ app.use(
 // Routes
 app.use("/api/v1/healthcheck", healthCheckRoute);
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/captain", captainRoute);
 
 // Swagger UI route
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
