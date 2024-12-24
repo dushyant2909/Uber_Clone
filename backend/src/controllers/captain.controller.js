@@ -105,4 +105,17 @@ const loginCaptain = asyncHandler(async (req, res) => {
         );
 })
 
-export { registerCaptain, loginCaptain }
+const captainProfile = asyncHandler(async (req, res) => {
+    const captainId = req.captain._id;
+
+    const captain = await Captain.findById(captainId).select("-password -refreshToken -_id");
+    if (!captain) {
+        throw new ApiError(404, "Captain not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, captain, "Captain profile fetched successfully")
+    );
+})
+
+export { registerCaptain, loginCaptain, captainProfile }
