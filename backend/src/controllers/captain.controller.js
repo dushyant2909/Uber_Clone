@@ -118,4 +118,28 @@ const captainProfile = asyncHandler(async (req, res) => {
     );
 })
 
-export { registerCaptain, loginCaptain, captainProfile }
+const logoutCaptain = asyncHandler(async (req, res) => {
+    const captainId = req.captain._id;
+
+    const captain = await Captain.findById(captainId);
+    if (!captain) {
+        throw new ApiError(404, "Captain not found");
+    }
+
+    captain.refreshToken = null;
+    await captain.save({ validateBeforeSave: false });
+
+    const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict"
+    }
+
+    return res.status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options).json(
+            new ApiResponse(200, {}, "Captain logged out successfully")
+        );
+})
+
+export { registerCaptain, loginCaptain, captainProfile, logoutCaptain }
