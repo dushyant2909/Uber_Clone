@@ -15,7 +15,7 @@ const Home = () => {
 
             {/* Get Started Section */}
             <div className="bg-gradient-to-t from-white via-white/90 to-white/80 shadow-lg py-8 px-10">
-                <h2 className="text-4xl font-extrabold text-gray-800 text-center leading-snug mb-5">
+                <h2 className="text-4xl font-extrabold text-gray-800 text-center leading-snug mb-4">
                     Get Started with Uber
                 </h2>
                 <p className="text-gray-600 text-center text-sm mb-4">
