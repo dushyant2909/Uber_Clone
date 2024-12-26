@@ -42,10 +42,10 @@ const UserLogin = () => {
                 />
             </Link>
 
-            <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8 pt-5">
+            <div className="w-full mt-4 max-w-md bg-white shadow-lg rounded-xl p-8 pt-5">
                 {/* Heading */}
-                <h3 className="text-2xl font-bold text-gray-800 mb-3 text-center">Welcome Back!</h3>
-                <p className="text-sm text-gray-600 mb-8 text-center">
+                <h3 className="text-2xl font-bold text-gray-800 mb-2 text-center">Welcome Back!</h3>
+                <p className="text-sm text-gray-600 mb-4 text-center">
                     Please enter your credentials to log in.
                 </p>
 
@@ -62,7 +62,7 @@ const UserLogin = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 mb-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                         placeholder="e.g. john@gmail.com"
                     />
 
@@ -78,7 +78,7 @@ const UserLogin = () => {
                             value={formData.password}
                             onChange={handleInputChange}
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="Enter your password"
                         />
                         <span
@@ -111,7 +111,7 @@ const UserLogin = () => {
                 <p className="text-center text-sm text-gray-500 mt-6">
                     Don't have an account?{' '}
                     <Link to="/user/signup" className="text-indigo-600 hover:underline">
-                        Sign Up
+                        Sign Up as User
                     </Link>
                 </p>
             </div>
