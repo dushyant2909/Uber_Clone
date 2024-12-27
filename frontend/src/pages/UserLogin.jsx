@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import axios from 'axios';
+import { toast } from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { loginUser } from "../slices/userSlice.js"
 
 const UserLogin = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [formData, setFormData] = useState({
         email: "",
         password: ""
@@ -24,10 +30,21 @@ const UserLogin = () => {
     };
 
     // Handle Form Submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form Data Submitted:", formData);
-        // Add your form submission logic here
+        try {
+            const response = await axios.post('/api/v1/user/login', formData)
+            if (response.data.success) {
+                toast.success(response.data.message)
+                dispatch(loginUser())
+                navigate('/welcome')
+            }
+            else {
+                console.error("Unexpected response:", response);
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
         setFormData({ email: "", password: "" });
     };
 

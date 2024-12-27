@@ -66,6 +66,7 @@ const UserSignup = () => {
             });
             setErrors({});
         }
+        console.log(formData)
     };
 
     return (
