@@ -4,13 +4,13 @@ import UserLogin from './pages/UserLogin'
 import UserSignup from './pages/UserSignup'
 import CaptainLogin from './pages/CaptainLogin'
 import CaptainSignup from './pages/CaptainSignup'
-import Start from './pages/Start'
 import AuthLayout from './components/AuthLayout'
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import axios from 'axios'
 import { loginUser, registerUser, setLoading } from './slices/userSlice'
 import NotFound from './pages/NotFound'
+import UserHome from './pages/UserHome'
 
 function App() {
   const dispatch = useDispatch()
@@ -52,8 +52,8 @@ function App() {
       <Route path="/captain/signup" element={<AuthLayout authentication={false}>
         <CaptainSignup />
       </AuthLayout>} />
-      <Route path='/welcome' element={<AuthLayout authentication={true}>
-        <Start />
+      <Route path='/user/home' element={<AuthLayout authentication={true}>
+        <UserHome />
       </AuthLayout>} />
       <Route path="*" element={<NotFound />} />
     </Routes>)
